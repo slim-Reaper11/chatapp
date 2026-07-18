@@ -1,17 +1,25 @@
-# chatapp
+# Chat App
 
-A new Flutter project.
+A messaging application built with Flutter using Clean Architecture and BLoC state management.
 
-## Getting Started
+This project is a demo messenger application that connects to a Django REST API backend with JWT authentication.
 
-This project is a starting point for a Flutter application.
+The goal of this project is to demonstrate scalable Flutter development practices, including feature-based architecture, dependency injection, repository pattern, and BLoC state management.
 
-A few resources to get you started if this is your first Flutter project:
+## Current Features
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+### Authentication
+- User login flow implemented
+- BLoC-based state management
+- Repository pattern for separating business logic and data access
+- Dependency injection for AuthRepository
+- Fake authentication data source for development/testing
+- Authentication states:
+  - Initial
+  - Loading
+  - Authenticated
+  - Failure
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Architecture
+
+The project follows a feature-based clean architecture approach:
