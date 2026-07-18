@@ -1,15 +1,22 @@
-import 'package:chatapp/features/auth/presentation/pages/login_page.dart';
+import 'package:chatapp/features/auth/data/datasource/fake_data_source.dart';
+import 'package:chatapp/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
+import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chatapp/features/auth/presentation/pages/login_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const ChatApp());
+  final authDataSource = FakeAuthDataSource();
+  final authRepository = AuthRepositoryImpl(authDataSource);
+
+  runApp(ChatApp(authRepository: authRepository));
 }
 
 class ChatApp extends StatelessWidget {
-  const ChatApp({super.key});
+  const ChatApp({super.key, required this.authRepository});
+
+  final AuthRepository authRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +76,10 @@ class ChatApp extends StatelessWidget {
 
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
-      home: LoginPage(),
+      home: BlocProvider(
+        create: (context) => AuthBloc(repository: authRepository),
+        child: LoginView(),
+      ),
     );
   }
 }

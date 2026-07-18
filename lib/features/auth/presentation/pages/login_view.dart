@@ -1,15 +1,19 @@
+import 'package:chatapp/features/auth/data/models/login_request.dart';
+import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
+import 'package:chatapp/features/auth/presentation/bloc/auth_state.dart';
 import 'package:chatapp/features/conversations/presentation/pages/conversation_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  State<LoginPage> createState() => LoginPageState();
+  State<LoginView> createState() => LoginViewState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
@@ -18,17 +22,6 @@ class LoginPageState extends State<LoginPage> {
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    initialization();
-  }
-
-  void initialization() async {
-    // await Future.delayed(const Duration(seconds: 3));
-    FlutterNativeSplash.remove();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,16 +104,45 @@ class LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 20),
 
                 // Sign in button with loading state.
-                FilledButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ConversationPage(),
-                      ),
-                    );
+                BlocListener<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthSuccess) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ConversationPage(),
+                        ),
+                      );
+                    }
+                    if (state is AuthFailure) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('${state.e}')));
+                    }
                   },
-                  child: Text('Sign in'),
+                  child: FilledButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                        LoginRequested(
+                          request: LoginRequest(
+                            userName: _emailController.text,
+                            password: _passwordController.text,
+                          ),
+                        ),
+                      );
+                    },
+
+                    child: BlocBuilder<AuthBloc, AuthState>(
+                      buildWhen: (previous, current) => previous != current,
+                      builder: (context, state) {
+                        if (state == AuthLoading()) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return Text('Sign in');
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
