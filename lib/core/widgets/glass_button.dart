@@ -30,8 +30,8 @@ class Glassbutton extends StatelessWidget {
           boxShadow: shadow
               ? [
                   BoxShadow(
-                    color: const Color.fromARGB(25, 0, 0, 0),
-                    blurRadius: 10,
+                    color: const Color.fromARGB(95, 3, 25, 22),
+                    blurRadius: 30,
                     offset: Offset(0, 10),
                   ),
                 ]
@@ -47,7 +47,12 @@ class Glassbutton extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: const Color.fromARGB(
+                    255,
+                    0,
+                    0,
+                    0,
+                  ).withValues(alpha: 0.2),
                   // width: 0.2,
                 ),
                 borderRadius: _borderRadius,
@@ -56,13 +61,27 @@ class Glassbutton extends StatelessWidget {
                   end: AlignmentGeometry.bottomRight,
 
                   colors: [
-                    Colors.white.withValues(alpha: 0.1),
-                    Colors.white.withValues(alpha: 0.15),
+                    const Color.fromARGB(
+                      255,
+                      255,
+                      255,
+                      255,
+                    ).withValues(alpha: 0.1),
+                    const Color.fromARGB(
+                      255,
+                      255,
+                      255,
+                      255,
+                    ).withValues(alpha: 0.15),
                   ],
                 ),
               ),
             ),
-            InkWell(onTap: () {}, child: Text('data')),
+            InkWell(
+              onTap: () {},
+              borderRadius: BorderRadius.circular(20),
+              child: child,
+            ),
           ],
         ),
       ),
