@@ -1,8 +1,6 @@
-import 'dart:ffi';
 
 import 'package:chatapp/core/widgets/glass_button.dart';
 import 'package:chatapp/core/widgets/glass_container.dart';
-import 'package:chatapp/features/conversations/presentation/widgets/conversation_item.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatelessWidget {

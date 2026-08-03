@@ -1,6 +1,5 @@
 class User {
-  const User({required this.id, required this.uuid, required this.username});
-  final int id;
-  final String uuid;
+  const User({required this.username, required this.token});
   final String username;
+  final String token;
 }

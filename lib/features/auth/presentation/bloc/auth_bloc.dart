@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.repository}) : super(AuthInitial()) {
     on<LoginRequested>(_loginPressed);
+    on<RegisterRequested>(_registerPressed);
   }
   final AuthRepository repository;
 
@@ -13,8 +14,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
-      final token = await repository.login(event.request);
-      emit(AuthSuccess(token: token));
+      final user = await repository.login(event.request);
+      emit(AuthSuccess(user: user));
+    } catch (e) {
+      emit(AuthFailure(e: e.toString()));
+    }
+  }
+
+  void _registerPressed(RegisterRequested event, Emitter emit) async {
+    emit(AuthLoading());
+
+    try {
+      final user = await repository.register(event.request);
+      emit(AuthSuccess(user: user));
     } catch (e) {
       emit(AuthFailure(e: e.toString()));
     }

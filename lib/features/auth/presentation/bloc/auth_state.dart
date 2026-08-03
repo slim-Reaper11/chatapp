@@ -1,4 +1,5 @@
 import 'package:chatapp/features/auth/data/models/token_model.dart';
+import 'package:chatapp/features/auth/data/models/user_model.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class AuthState extends Equatable {
@@ -17,9 +18,9 @@ final class AuthLoading extends AuthState {
 }
 
 final class AuthSuccess extends AuthState {
-  const AuthSuccess({required this.token});
+  const AuthSuccess({required this.user});
 
-  final Token token;
+  final User user;
 }
 
 final class AuthFailure extends AuthState {

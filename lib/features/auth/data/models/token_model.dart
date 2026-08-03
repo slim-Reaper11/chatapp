@@ -1,5 +1,8 @@
 class Token {
-  const Token({required this.accessToken, required this.refreshToken});
-  final String accessToken;
-  final String refreshToken;
+  const Token({required this.token});
+  final String token;
+
+  factory Token.fromJson(Map<String, dynamic> json) {
+    return Token(token: json["token"]);
+  }
 }

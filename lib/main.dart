@@ -1,4 +1,5 @@
-import 'package:chatapp/features/auth/data/datasource/fake_data_source.dart';
+import 'package:chatapp/core/network/dio_client.dart';
+import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source_impl.dart';
 import 'package:chatapp/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  final authDataSource = FakeAuthDataSource();
+  final dio = DioClient().dio;
+  final authDataSource = AuthRemoteDataSourceImpl(dio);
   final authRepository = AuthRepositoryImpl(authDataSource);
 
   runApp(ChatApp(authRepository: authRepository));
