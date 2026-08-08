@@ -24,8 +24,10 @@ class LoginViewState extends State<LoginView> {
 
   bool isUserLoginIn = true;
 
-  final _emailController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   void toggleLoginRegister() {
     setState(() {
@@ -72,18 +74,15 @@ class LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 25),
                   TextFormField(
-                    controller: _emailController,
+                    controller: _userNameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: 'Email address',
-                      prefixIcon: Icon(Icons.mail_outline_rounded),
+                      labelText: 'User name',
+                      prefixIcon: Icon(Icons.person),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter your email';
-                      }
-                      if (!value.contains('@')) {
-                        return 'Enter a valid email';
                       }
                       return null;
                     },
@@ -152,7 +151,7 @@ class LoginViewState extends State<LoginView> {
                         context.read<AuthBloc>().add(
                           LoginRequested(
                             request: LoginRequest(
-                              userName: _emailController.text,
+                              userName: _userNameController.text,
                               password: _passwordController.text,
                             ),
                           ),
@@ -212,18 +211,45 @@ class LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 25),
                   TextFormField(
-                    controller: _emailController,
+                    controller: _firstNameController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                      labelText: 'first name',
+                      prefixIcon: Icon(Icons.boy_rounded),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18),
+                  TextFormField(
+                    controller: _lastNameController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                      labelText: 'first name',
+                      prefixIcon: Icon(Icons.man_3),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 18),
+                  TextFormField(
+                    controller: _userNameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      labelText: 'Email address',
-                      prefixIcon: Icon(Icons.mail_outline_rounded),
+                      labelText: 'User name',
+                      prefixIcon: Icon(Icons.person),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter your email';
-                      }
-                      if (!value.contains('@')) {
-                        return 'Enter a valid email';
                       }
                       return null;
                     },
@@ -292,8 +318,11 @@ class LoginViewState extends State<LoginView> {
                         context.read<AuthBloc>().add(
                           RegisterRequested(
                             request: RegisterRequest(
-                              userName: _emailController.text,
+                              userName: _userNameController.text,
                               password: _passwordController.text,
+                              firstName: _firstNameController.text,
+                              lastName: _lastNameController.text,
+                              picture: null,
                             ),
                           ),
                         );

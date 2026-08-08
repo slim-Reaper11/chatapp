@@ -17,6 +17,8 @@ final class LoginRequested extends AuthEvent {
   final LoginRequest request;
 }
 
+class AuthStarted extends AuthEvent {}
+
 final class LogoutRequested extends AuthEvent {
   const LogoutRequested();
 }

@@ -1,24 +1,38 @@
 import 'package:chatapp/core/network/dio_client.dart';
 import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source_impl.dart';
-import 'package:chatapp/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:chatapp/features/auth/data/datasource/token_storage.dart';
+import 'package:chatapp/features/auth/domain/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chatapp/features/auth/presentation/pages/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   final dio = DioClient().dio;
   final authDataSource = AuthRemoteDataSourceImpl(dio);
-  final authRepository = AuthRepositoryImpl(authDataSource);
 
-  runApp(ChatApp(authRepository: authRepository));
+  final storage = FlutterSecureStorage();
+  final tokenStorage = TokenStorage(storage);
+
+  final authRepository = AuthRepositoryImpl(
+    dataSource: authDataSource,
+    secureStorage: tokenStorage,
+  );
+  runApp(ChatApp(authRepository: authRepository, tokenStorage: tokenStorage));
 }
 
 class ChatApp extends StatelessWidget {
-  const ChatApp({super.key, required this.authRepository});
+  const ChatApp({
+    super.key,
+    required this.authRepository,
+    required this.tokenStorage,
+  });
 
   final AuthRepository authRepository;
+
+  final TokenStorage tokenStorage;
 
   @override
   Widget build(BuildContext context) {
