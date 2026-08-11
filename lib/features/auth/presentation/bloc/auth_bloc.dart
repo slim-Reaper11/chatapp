@@ -7,6 +7,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.repository}) : super(AuthInitial()) {
     on<LoginRequested>(_loginPressed);
     on<RegisterRequested>(_registerPressed);
+    on<AuthStarted>(_onAuthStarted);
   }
   final AuthRepository repository;
 
@@ -26,6 +27,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await repository.register(event.request);
+      emit(AuthSuccess(user: user));
+    } catch (e) {
+      emit(AuthFailure(e: e.toString()));
+    }
+  }
+
+  void _onAuthStarted(AuthStarted event, Emitter emit) async {
+    emit(AuthInitialLoading());
+
+    try {
+      final user = await repository.restoreSession();
+
+      if (user == null) {
+        emit(AuthUnauthenticated());
+        return;
+      }
+
       emit(AuthSuccess(user: user));
     } catch (e) {
       emit(AuthFailure(e: e.toString()));

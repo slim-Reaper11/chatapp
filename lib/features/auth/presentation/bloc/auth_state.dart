@@ -1,4 +1,3 @@
-import 'package:chatapp/features/auth/data/models/token_model.dart';
 import 'package:chatapp/features/auth/data/models/user_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,4 +26,12 @@ final class AuthFailure extends AuthState {
   const AuthFailure({required this.e});
 
   final String e;
+}
+
+final class AuthUnauthenticated extends AuthState {
+  const AuthUnauthenticated();
+}
+
+final class AuthInitialLoading extends AuthState {
+  const AuthInitialLoading();
 }

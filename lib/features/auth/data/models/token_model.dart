@@ -1,5 +1,3 @@
-import 'package:jwt_decoder/jwt_decoder.dart';
-
 class Token {
   const Token({
     required this.accessToken,

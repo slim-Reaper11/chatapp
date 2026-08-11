@@ -1,10 +1,11 @@
 import 'package:chatapp/core/network/dio_client.dart';
+import 'package:chatapp/core/storage/secure_storage.dart';
 import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source_impl.dart';
-import 'package:chatapp/features/auth/data/datasource/token_storage.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:chatapp/features/auth/presentation/pages/login_view.dart';
+import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
+import 'package:chatapp/features/auth/presentation/pages/auth_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,25 +15,25 @@ void main() {
   final authDataSource = AuthRemoteDataSourceImpl(dio);
 
   final storage = FlutterSecureStorage();
-  final tokenStorage = TokenStorage(storage);
+  final secureStorage = SecureStorage(storage);
 
   final authRepository = AuthRepositoryImpl(
     dataSource: authDataSource,
-    secureStorage: tokenStorage,
+    secureStorage: secureStorage,
   );
-  runApp(ChatApp(authRepository: authRepository, tokenStorage: tokenStorage));
+  runApp(ChatApp(authRepository: authRepository, secureStorage: secureStorage));
 }
 
 class ChatApp extends StatelessWidget {
   const ChatApp({
     super.key,
     required this.authRepository,
-    required this.tokenStorage,
+    required this.secureStorage,
   });
 
   final AuthRepository authRepository;
 
-  final TokenStorage tokenStorage;
+  final SecureStorage secureStorage;
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +94,9 @@ class ChatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
       home: BlocProvider(
-        create: (context) => AuthBloc(repository: authRepository),
-        child: LoginView(),
+        create: (context) =>
+            AuthBloc(repository: authRepository)..add(AuthStarted()),
+        child: AuthView(),
       ),
     );
   }

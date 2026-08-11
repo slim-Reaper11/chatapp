@@ -3,7 +3,6 @@ import 'package:chatapp/features/auth/data/models/register_request.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_state.dart';
-import 'package:chatapp/features/auth/presentation/pages/register_view.dart';
 import 'package:chatapp/features/conversations/presentation/pages/conversation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

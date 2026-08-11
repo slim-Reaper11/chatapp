@@ -1,10 +1,7 @@
 import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source.dart';
-import 'package:chatapp/features/auth/data/datasource/token_storage.dart';
 import 'package:chatapp/features/auth/data/models/login_request.dart';
 import 'package:chatapp/features/auth/data/models/register_request.dart';
 import 'package:chatapp/features/auth/data/models/token_model.dart';
-import 'package:chatapp/features/auth/data/models/user_model.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
@@ -16,54 +13,89 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<Token> register(RegisterRequest request) async {
-    final response = await dio.post(
-      'users/register',
-      data: {
-        "username": request.userName,
-        "password": request.password,
-        "firstName": request.firstName,
-        "lastName": request.lastName,
-        "picture": null,
-      },
-    );
-    return Token.fromJson(response.data);
-    // developer.log(token.accessToken, name: 'Token');
-
-    // Map<String, dynamic> decodedToken = JwtDecoder.decode(token.accessToken);
-    // developer.log(decodedToken.toString(), name: 'Token');
-
-    // // developer.log(decodedToken, name: 'Token');
-    // return User(
-    //   id: decodedToken['sub'] as String,
-    //   username: decodedToken['preferred_username'] as String,
-    //   firstName: decodedToken['given_name'] as String,
-    //   lastName: decodedToken['family_name'] as String,
-    // );
+    try {
+      final response = await dio.post(
+        'users/register',
+        data: {
+          "username": request.userName,
+          "password": request.password,
+          "firstName": request.firstName,
+          "lastName": request.lastName,
+          "picture": null,
+        },
+      );
+      return Token.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        // status code error like 400 401 or 409
+        throw Exception('user name conflict');
+      } else {
+        // timeout or no internet
+        throw Exception('connection timout');
+      }
+    } catch (e) {
+      // other errors like json parsing
+      throw Exception('unknown error');
+    }
   }
 
   @override
   Future<Token> login(LoginRequest request) async {
-    // if (request.userName == 'admin' && request.password == 'admin') {
-    //   return User(username: 'admin', token: 'admin');
-    // }
+    try {
+      final response = await dio.post(
+        'users/login',
+        data: {"username": request.userName, "password": request.password},
+      );
+
+      return Token.fromJson(response.data);
+    } on DioException catch (e) {
+      final error = getError(e);
+      throw error;
+    }
+  }
+
+  @override
+  Future<Token> refresh(String token) async {
     final response = await dio.post(
-      'users/login',
-      data: {"username": request.userName, "password": request.password},
+      'users/token/refresh',
+      data: {"tokenValue": token},
     );
 
     return Token.fromJson(response.data);
-    // developer.log(token.accessToken, name: 'Token');
+  }
+}
 
-    // Map<String, dynamic> decodedToken = JwtDecoder.decode(token.accessToken);
-    // developer.log(decodedToken.toString(), name: 'Token');
+Exception getError(DioException error) {
+  switch (error.type) {
+    case DioExceptionType.connectionTimeout:
+    case DioExceptionType.sendTimeout:
+    case DioExceptionType.receiveTimeout:
+      return Exception("The connection timed out. Please try again.");
+    case DioExceptionType.badResponse:
+      // Handle explicit HTTP status codes
+      return Exception(_handleStatusCode(error.response?.statusCode));
+    case DioExceptionType.cancel:
+      return Exception("The request was cancelled.");
+    case DioExceptionType.connectionError:
+      return Exception("No internet connection detected.");
+    default:
+      return Exception("Something went wrong. Please try again.");
+  }
+}
 
-    // // developer.log(decodedToken, name: 'Token');
-
-    // return User(
-    //   id: decodedToken['sub'] as String,
-    //   username: decodedToken['preferred_username'] as String,
-    //   firstName: decodedToken['given_name'] as String,
-    //   lastName: decodedToken['family_name'] as String,
-    // );
+String _handleStatusCode(int? statusCode) {
+  switch (statusCode) {
+    case 400:
+      return "Bad request syntax.";
+    case 401:
+      return "Unauthorized access.";
+    case 403:
+      return "Forbidden action.";
+    case 404:
+      return "Requested resource not found.";
+    case 500:
+      return "Internal server error.";
+    default:
+      return "Received invalid status code: $statusCode";
   }
 }
