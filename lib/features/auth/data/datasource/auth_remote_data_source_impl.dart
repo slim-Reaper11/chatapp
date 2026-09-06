@@ -26,16 +26,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       return Token.fromJson(response.data);
     } on DioException catch (e) {
-      if (e.response != null) {
-        // status code error like 400 401 or 409
-        throw Exception('user name conflict');
-      } else {
-        // timeout or no internet
-        throw Exception('connection timout');
-      }
-    } catch (e) {
-      // other errors like json parsing
-      throw Exception('unknown error');
+      final error = getError(e);
+      throw error;
     }
   }
 
@@ -56,12 +48,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<Token> refresh(String token) async {
-    final response = await dio.post(
-      'users/token/refresh',
-      data: {"tokenValue": token},
-    );
+    try {
+      final response = await dio.post(
+        'users/token/refresh',
+        data: {"tokenValue": token},
+      );
 
-    return Token.fromJson(response.data);
+      return Token.fromJson(response.data);
+    } on DioException catch (e) {
+      final error = getError(e);
+      throw error;
+    }
   }
 }
 

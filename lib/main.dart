@@ -1,27 +1,22 @@
-import 'package:chatapp/core/network/dio_client.dart';
+import 'package:chatapp/core/di/injection_container.dart';
 import 'package:chatapp/core/storage/secure_storage.dart';
-import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source_impl.dart';
-import 'package:chatapp/features/auth/domain/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
 import 'package:chatapp/features/auth/presentation/pages/auth_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-void main() {
-  final dio = DioClient().dio;
-  final authDataSource = AuthRemoteDataSourceImpl(dio);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  final storage = FlutterSecureStorage();
-  final secureStorage = SecureStorage(storage);
-
-  final authRepository = AuthRepositoryImpl(
-    dataSource: authDataSource,
-    secureStorage: secureStorage,
+  await setupDependencies();
+  runApp(
+    ChatApp(
+      authRepository: sl<AuthRepository>(),
+      secureStorage: sl<SecureStorage>(),
+    ),
   );
-  runApp(ChatApp(authRepository: authRepository, secureStorage: secureStorage));
 }
 
 class ChatApp extends StatelessWidget {
@@ -94,8 +89,8 @@ class ChatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
       home: BlocProvider(
-        create: (context) =>
-            AuthBloc(repository: authRepository)..add(AuthStarted()),
+        create: (context) => sl<AuthBloc>()..add(AuthStarted()),
+        // AuthBloc(repository: authRepository)..add(AuthStarted()),
         child: AuthView(),
       ),
     );

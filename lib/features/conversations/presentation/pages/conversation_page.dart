@@ -11,12 +11,14 @@ class ConversationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 204, 219, 219),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.menu),
-          iconSize: 30,
-        ),
+        // automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Scaffold.of(context).openDrawer();
+        //   },
+        //   icon: Icon(Icons.menu),
+        //   iconSize: 30,
+        // ),
         title: Container(
           decoration: BoxDecoration(
             color: colorScheme.surfaceTint,
@@ -35,6 +37,32 @@ class ConversationPage extends StatelessWidget {
             icon: Icon(Icons.account_circle_rounded),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
       ),
       backgroundColor: const Color.fromARGB(255, 204, 219, 219),
 

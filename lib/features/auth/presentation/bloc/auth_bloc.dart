@@ -1,21 +1,26 @@
+import 'package:chatapp/features/auth/data/models/current_user.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required this.repository}) : super(AuthInitial()) {
+  AuthBloc({required this.repository, required this.currentUser})
+    : super(AuthInitial()) {
     on<LoginRequested>(_loginPressed);
     on<RegisterRequested>(_registerPressed);
     on<AuthStarted>(_onAuthStarted);
   }
+
   final AuthRepository repository;
+  final CurrentUser currentUser;
 
   void _loginPressed(LoginRequested event, Emitter emit) async {
     emit(AuthLoading());
 
     try {
       final user = await repository.login(event.request);
+      currentUser.setUser(user);
       emit(AuthSuccess(user: user));
     } catch (e) {
       emit(AuthFailure(e: e.toString()));
