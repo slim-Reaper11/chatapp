@@ -99,4 +99,21 @@ class AuthRepositoryImpl implements AuthRepository {
     }
     return null;
   }
+
+  @override
+  Future<Token> refreshToken() async {
+    try {
+      final refreshToken = await secureStorage.getRefreshToken();
+
+      final token = await dataSource.refresh(refreshToken!);
+      await secureStorage.saveTokens(
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+        idToken: token.accessToken,
+      );
+      return token;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

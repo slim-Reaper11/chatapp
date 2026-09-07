@@ -1,4 +1,5 @@
 import 'package:chatapp/features/conversations/presentation/widgets/conversation_item.dart';
+import 'package:chatapp/features/user%20profile/presentation/pages/user_view.dart';
 import 'package:flutter/material.dart';
 
 class ConversationPage extends StatelessWidget {
@@ -32,7 +33,12 @@ class ConversationPage extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserView()),
+              );
+            },
             iconSize: 40,
             icon: Icon(Icons.account_circle_rounded),
           ),

@@ -2,7 +2,6 @@ import 'package:chatapp/features/auth/data/datasource/auth_remote_data_source.da
 import 'package:chatapp/features/auth/data/models/login_request.dart';
 import 'package:chatapp/features/auth/data/models/register_request.dart';
 import 'package:chatapp/features/auth/data/models/token_model.dart';
-import 'dart:developer' as developer;
 
 import 'package:dio/dio.dart';
 

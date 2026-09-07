@@ -14,7 +14,14 @@ final class UserProfileLoading extends UserProfileState {
   const UserProfileLoading();
 }
 
-
 final class UserProfileSuccess extends UserProfileState {
   const UserProfileSuccess();
+}
+
+final class AvatarLoading extends UserProfileState {
+  const AvatarLoading();
+}
+
+final class AvatarLoadingSuccess extends UserProfileState {
+  const AvatarLoadingSuccess();
 }

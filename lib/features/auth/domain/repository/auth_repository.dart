@@ -1,5 +1,6 @@
 import 'package:chatapp/features/auth/data/models/login_request.dart';
 import 'package:chatapp/features/auth/data/models/register_request.dart';
+import 'package:chatapp/features/auth/data/models/token_model.dart';
 import 'package:chatapp/features/auth/data/models/user_model.dart';
 
 abstract class AuthRepository {
@@ -9,5 +10,5 @@ abstract class AuthRepository {
 
   Future<User?> restoreSession();
 
-  // Future<Token> refreshToken(String refreshToken);
+  Future<Token> refreshToken();
 }

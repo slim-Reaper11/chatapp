@@ -1,7 +1,10 @@
+import 'package:chatapp/core/network/auth_interceptor.dart';
+import 'package:chatapp/core/storage/secure_storage.dart';
+import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:dio/dio.dart';
 
 class DioClient {
-  final Dio dio;
+  late final Dio dio;
 
   DioClient()
     : dio = Dio(
@@ -12,4 +15,17 @@ class DioClient {
           headers: {'Content-Type': 'application/json'},
         ),
       );
+
+  void addAuthInterceptor({
+    required AuthRepository authRepository,
+    required SecureStorage secureStorage,
+  }) {
+    dio.interceptors.add(
+      AuthInterceptor(
+        authRepository: authRepository,
+        secureStorage: secureStorage,
+        dio: dio,
+      ),
+    );
+  }
 }

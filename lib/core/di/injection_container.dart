@@ -6,17 +6,20 @@ import 'package:chatapp/features/auth/data/models/current_user.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chatapp/features/user%20profile/domain/repository/User_profile_repository.dart';
+import 'package:chatapp/features/user%20profile/domain/repository/user_profile_repository_impl.dart';
+import 'package:chatapp/features/user%20profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 
 Future<void> setupDependencies() async {
-  sl.registerLazySingleton<DioClient>(() => DioClient());
-
   sl.registerLazySingleton<SecureStorage>(
     () => SecureStorage(FlutterSecureStorage()),
   );
+
+  sl.registerLazySingleton<DioClient>(() => DioClient());
 
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(sl<DioClient>().dio),
@@ -28,6 +31,12 @@ Future<void> setupDependencies() async {
       secureStorage: sl<SecureStorage>(),
     ),
   );
+
+  sl<DioClient>().addAuthInterceptor(
+    authRepository: sl<AuthRepository>(),
+    secureStorage: sl<SecureStorage>(),
+  );
+
   sl.registerLazySingleton<CurrentUser>(() => CurrentUser());
 
   sl.registerFactory(
@@ -35,5 +44,13 @@ Future<void> setupDependencies() async {
       repository: sl<AuthRepository>(),
       currentUser: sl<CurrentUser>(),
     ),
+  );
+
+  sl.registerLazySingleton<UserProfileRepository>(
+    () => UserProfileRepositoryImpl(),
+  );
+
+  sl.registerFactory(
+    () => UserProfileBloc(userProfileRepository: sl<UserProfileRepository>()),
   );
 }
