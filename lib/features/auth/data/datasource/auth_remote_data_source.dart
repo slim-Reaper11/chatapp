@@ -8,6 +8,4 @@ abstract class AuthRemoteDataSource {
   Future<Token> login(LoginRequest request);
 
   Future<Token> refresh(String token);
-
-  // Future<Token> refreshToken(String refreshToken);
 }

@@ -6,6 +6,8 @@ import 'package:chatapp/features/auth/data/models/current_user.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository_impl.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:chatapp/features/user%20profile/data/datasource/user_profile_datasource.dart';
+import 'package:chatapp/features/user%20profile/data/datasource/user_profile_datasource_impl.dart';
 import 'package:chatapp/features/user%20profile/domain/repository/User_profile_repository.dart';
 import 'package:chatapp/features/user%20profile/domain/repository/user_profile_repository_impl.dart';
 import 'package:chatapp/features/user%20profile/presentation/bloc/user_profile_bloc.dart';
@@ -46,11 +48,13 @@ Future<void> setupDependencies() async {
     ),
   );
 
+  sl.registerLazySingleton<UserProfileDatasource>(
+    () => UserProfileDatasourceImpl(),
+  );
+
   sl.registerLazySingleton<UserProfileRepository>(
     () => UserProfileRepositoryImpl(),
   );
 
-  sl.registerFactory(
-    () => UserProfileBloc(userProfileRepository: sl<UserProfileRepository>()),
-  );
+  sl.registerFactory<UserProfileBloc>(() => UserProfileBloc());
 }

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:chatapp/core/storage/secure_storage.dart';
 import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:dio/dio.dart';
@@ -29,7 +31,7 @@ class AuthInterceptor extends Interceptor {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
 
-    handler.next(options);
+    return handler.next(options);
   }
 
   @override

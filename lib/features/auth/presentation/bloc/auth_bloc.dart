@@ -32,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       final user = await repository.register(event.request);
+      currentUser.setUser(user);
       emit(AuthSuccess(user: user));
     } catch (e) {
       emit(AuthFailure(e: e.toString()));
@@ -48,6 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthUnauthenticated());
         return;
       }
+      currentUser.setUser(user);
 
       emit(AuthSuccess(user: user));
     } catch (e) {

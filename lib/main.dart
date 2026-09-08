@@ -4,7 +4,6 @@ import 'package:chatapp/features/auth/domain/repository/auth_repository.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:chatapp/features/auth/presentation/bloc/auth_event.dart';
 import 'package:chatapp/features/auth/presentation/pages/auth_view.dart';
-import 'package:chatapp/features/user%20profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
